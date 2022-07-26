@@ -1,6 +1,9 @@
+
 const inputClp = document.querySelector('#inputClp');
 const inputCurrency = document.querySelector('#inputCurrency');
 const currencyConverter = document.querySelector('#currencyConverter');
+const currencyC = document.querySelector('#currencyC').value;
+
 
 
 var currencyDolar = 0;
@@ -13,6 +16,22 @@ const calcularBtn = document.querySelector('#calcularBtn');
 var currencyTypeH1 = document.getElementById("currencyTypeH1");
 const dateNow = dateFunction();
 var result = document.getElementById("result");
+
+
+
+window.addEventListener('load', () => {
+  inputClp.value = ''
+})
+
+inputClp.addEventListener('input', () => {
+ if(isNaN(inputClp.value) || inputClp.value <= 0)  {
+  inputClp.value = ''
+  inputClp.value.replace(/ /g, "")
+  alert('Ingresar solo numeros positivos, sin espacios')
+ }
+})
+
+
 
 // -- ** Fecha ** -- \\
 function dateFunction() {
@@ -74,14 +93,14 @@ renderCurrency();
 
 // -- ** cambio de tipo de moneda CLP ** -- \\
 
-  inputClp.addEventListener("change", function () {
-    var clpValue = inputClp.value;
-    precioClp = Number(inputClp.value);
-    const option_two = { style: "currency", currency: "CLP" };
-    const numberFormat2 = new Intl.NumberFormat("es-cl", option_two);
-    inputClp.value = numberFormat2.format(clpValue);
+inputClp.addEventListener("change", function () {
+  var clpValue = inputClp.value;
+  precioClp = Number(inputClp.value);
+  const option_two = { style: "currency", currency: "CLP" };
+  const numberFormat2 = new Intl.NumberFormat("es-cl", option_two);
+  inputClp.value = numberFormat2.format(clpValue);
 
-  });
+});
 
 
 
@@ -121,7 +140,7 @@ calcularBtn.addEventListener("click", function () {
 
 function validator() {
     let validate = false;
-    if (Number.isNaN(inputClp) || Math.sign(inputClp) === -1 || inputClp === 0) {
+    if  (Number.isNaN(inputClp.value) || Math.sign(inputClp.value) === -1 || inputClp.value === 0 || currencyC.selected == true) {
       alert("datos incorrectos, por favor seleccione un numero valido.");
     } else {
       validate = true;

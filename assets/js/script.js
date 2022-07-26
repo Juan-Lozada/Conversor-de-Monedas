@@ -56,16 +56,15 @@ const currencyApiURL = "https://mindicador.cl/api/";
     const currencyD = await getCurrency();
     currencyDolar = currencyD.dolar.valor;
     currencyEuro = currencyD.euro.valor;
-    console.log(currencyD.dolar.serie)
     let template ="";
     template += `
     <option class="option text-center" id="currencyC" value="${currencyD.dolar.codigo}">${currencyD.dolar.nombre}</option>
     `;
     template += `
-    <option class="option text-center" id="currencyC" value="${currencyD.euro.codigo}">${currencyD.euro.nombre}</option>
+    <option class="option text-center" id="currencyC2" value="${currencyD.euro.codigo}">${currencyD.euro.nombre}</option>
     `;
     template += `
-    <option class="option text-center" id="currencyC" selected> -- Seleccione una moneda -- </option>`;
+    <option class="option text-center" id="currencyC3" selected> -- Seleccione una moneda -- </option>`;
     
     inputCurrency.innerHTML = template;
 }
@@ -87,10 +86,10 @@ renderCurrency();
 
 
 function totalPrice(precioCurrency) {
-  var price = inputClp / precioCurrency;
+  var price = precioClp / precioCurrency;
   return price;
 }
-console.log(totalPrice())
+
 
 
 calcularBtn.addEventListener("click", function () {
@@ -135,55 +134,39 @@ function validator() {
 
 //Canvas Graphic
 async function chartData() {
-  const data = [];
-  const datePrice = [];
-  
-  var x = 0;
-  var contador = 0;
   var currencyType;
-
-  while (x < 10) {
-    contador++;
-    var dateNowCount = dateFunctionMenos(contador);
-    if (currencyChangeIndex === 0) {
-      var URL =
-        "https://mindicador.cl/api/" + "dolar" + "/" + dateNowCount + "";
+  let etiqueta ="";        
+    if (inputCurrency.selectedIndex == 0) {
+      var URL =  "https://mindicador.cl/api/" + "dolar" // + "/" + dateNowCount + "";
+       etiqueta ="Dolar";        
     } else {
-      var URL =
-        "https://mindicador.cl/api/" + "euro" + "/" + dateNowCount + "";
+      var URL =  "https://mindicador.cl/api/" + "euro" // + "/" + dateNowCount + "";
+      etiqueta ="Euro";        
     }
-console.log(currencyChangeIndex)
+
     try {
       const res = await fetch(URL);
-      const currencyDate = await res.json();
-      console.log(currencyDate.name)
-      if (currencyDate.serie.length != 0) {
-        currencyType = currencyDate.nombre;
-        var date = currencyDate.serie[0].date;
-        console.log(date)
-        data.push(currencyDate.serie[0].valor);
-        date = date.substring(0, 10);
-        datePrice.push(date);
-        x++;
-      }
+      const currencyDate = await res.json();   
+        currencyType = currencyDate.serie.map((val) => {return val.valor});
+        var date = currencyDate.serie.map((elemento) => { return elemento.fecha.split("T")[0] });
     } catch (error) {
       console.log(error);
     }
-  }
-  currencyTypeH1.innerHTML = currencyType;
+
+  
 
   const datasets = {
-    labels: datePrice,
+    labels: date,
     datasets: [
       {
-        label: currencyType,
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgb(255, 99, 132)",
-        data: data,
+        label: etiqueta,
+        backgroundColor: "#2B7A0B",
+        borderColor: "#5BB318",
+        data: currencyType,
       },
     ],
   };
-
+  currencyTypeH1.innerHTML ='Ultimo valor de:' + etiqueta;
   return datasets;
 }
 
@@ -207,9 +190,9 @@ console.log(currencyChangeIndex)
 
   function refreshCanva() {
     if (canvaOn === true) {
-      
       window.myChart.clear();
       window.myChart.destroy();
     }
     canvaOn = false;
+    
   }

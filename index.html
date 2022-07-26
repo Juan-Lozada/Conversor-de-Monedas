@@ -25,17 +25,17 @@
             <input type="text" class="form-control-lg col-8 mx-auto rounded" id="inputClp">
             <h3 class="text-center col-12 p-2">Moneda a convertir</h3>
             <select class="form-select-lg col-8 mx-auto  rounded" id="inputCurrency">
-            <option class="option text-center" id="currencyC" selected> -- Seleccione una moneda -- </option>
+            <option class="option text-center" id="currencyC" selected value="predeterminado"> -- Seleccione una moneda -- </option>
             
             </select>
             <button type="button" class="btn btn-outline-info text-light mx-auto col-5 rounded p-2 m-4" id="calcularBtn" >Calcular</button>
-            <h2 class="text-center">Result : <h2 id="result"></h2></h2>
+            <h2 ><h2 id="result" class="text-center col-12 mx-auto"></h2></h2>
         </div>
     </div>
 
     <section id="currencyConverter"></section>
     <div class="bg-light col-6 mx-auto">
-        <h1 class="text-center">Ultimo valor de <h1 id="currencyTypeH1"></h1></h1>
+        <h1 class="text-center" id="currencyTypeH1"></h1>
         <canvas id="myChart" style="width:100%;max-width:600px" class="mx-auto bg-light"></canvas>
     </div>
     

@@ -32,7 +32,7 @@ function validator() {
   let validate = false;
   const currencyC = inputCurrency.options[inputCurrency.selectedIndex].value;
   console.log(currencyC)
-  if (Number.isNaN(inputClp.value) || Math.sign(inputClp.value) === -1 || inputClp.value === 0) {
+  if (isNaN(inputClp.value) || inputClp.value <= 0) {
     inputClp.value = ''
     inputClp.value.replace(/ /g, "")
     alert("datos incorrectos, por favor seleccione un numero valido.");

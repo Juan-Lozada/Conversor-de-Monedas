@@ -2,7 +2,6 @@
 const inputClp = document.querySelector('#inputClp');
 const inputCurrency = document.querySelector('#inputCurrency');
 const currencyConverter = document.querySelector('#currencyConverter');
-const currencyC = document.querySelector('#currencyC').value;
 
 
 
@@ -23,14 +22,27 @@ window.addEventListener('load', () => {
   inputClp.value = ''
 })
 
-inputClp.addEventListener('input', () => {
- if(isNaN(inputClp.value) || inputClp.value <= 0)  {
-  inputClp.value = ''
-  inputClp.value.replace(/ /g, "")
-  alert('Ingresar solo numeros positivos, sin espacios')
- }
-})
 
+// -- ** validator converter ** -- \\
+inputClp.addEventListener('input', function validator() { })
+
+
+
+function validator() {
+  let validate = false;
+  const currencyC = inputCurrency.options[inputCurrency.selectedIndex].value;
+  console.log(currencyC)
+  if (Number.isNaN(inputClp.value) || Math.sign(inputClp.value) === -1 || inputClp.value === 0) {
+    inputClp.value = ''
+    inputClp.value.replace(/ /g, "")
+    alert("datos incorrectos, por favor seleccione un numero valido.");
+  } else if (currencyC == 'predeterminado') {
+    alert("Por favor, seleccione una moneda a convertir.")
+  } else {
+    validate = true;
+  }
+  return validate;
+}
 
 
 // -- ** Fecha ** -- \\
@@ -41,10 +53,12 @@ function dateFunction() {
   let month = date.getMonth() + 1;
   let year = date.getFullYear();
   var dateNow = day + "/" + month + "/" + year;
-  
+
   return dateNow;
 }
 
+
+// -- ** Fecha menos ** -- \\
 function dateFunctionMenos(menos) {
   let date = new Date();
 
@@ -58,34 +72,34 @@ function dateFunctionMenos(menos) {
 
 const currencyApiURL = "https://mindicador.cl/api/";
 
-  try {
-  } catch (error) {
-    swal("Oooopss!", "Wait a momento, error for conection!", "Error");
-  }
-  
-  async function getCurrency() {
-    const res = await fetch(currencyApiURL);
-    const currencyD = await res.json();
-    return currencyD;
-  }
-  
+try {
+} catch (error) {
+  swal("Oooopss!", "Wait a momento, error for conection!", "Error");
+}
 
-  // -- ** Render Moneda ** -- \\
-  async function renderCurrency() {
-    const currencyD = await getCurrency();
-    currencyDolar = currencyD.dolar.valor;
-    currencyEuro = currencyD.euro.valor;
-    let template ="";
-    template += `
+async function getCurrency() {
+  const res = await fetch(currencyApiURL);
+  const currencyD = await res.json();
+  return currencyD;
+}
+
+
+// -- ** Render Moneda ** -- \\
+async function renderCurrency() {
+  const currencyD = await getCurrency();
+  currencyDolar = currencyD.dolar.valor;
+  currencyEuro = currencyD.euro.valor;
+  let template = "";
+  template += `
     <option class="option text-center" id="currencyC" value="${currencyD.dolar.codigo}">${currencyD.dolar.nombre}</option>
     `;
-    template += `
+  template += `
     <option class="option text-center" id="currencyC2" value="${currencyD.euro.codigo}">${currencyD.euro.nombre}</option>
     `;
-    template += `
-    <option class="option text-center" id="currencyC3" selected> -- Seleccione una moneda -- </option>`;
-    
-    inputCurrency.innerHTML = template;
+  template += `
+    <option class="option text-center" id="currencyC3" selected value="predeterminado"> -- Seleccione una moneda -- </option>`;
+
+  inputCurrency.innerHTML = template;
 }
 renderCurrency();
 
@@ -109,20 +123,20 @@ function totalPrice(precioCurrency) {
   return price;
 }
 
-
+// -- ** Evento Button ** -- \\
 
 calcularBtn.addEventListener("click", function () {
   refreshCanva();
   if (validator() == true) {
     switch (inputCurrency.selectedIndex) {
       case 0:
-        const option_4 = { style: "currency", currency: "USD", decimal: ',', separator: '.'};
+        const option_4 = { style: "currency", currency: "USD", decimal: ',', separator: '.' };
         const numberFormat4 = new Intl.NumberFormat("en-us", option_4);
         result.innerHTML =
           numberFormat4.format(totalPrice(currencyDolar)) + " Dollars";
         break;
       case 1:
-        const option_3 = { style: "currency", currency: "EUR", decimal: ','};
+        const option_3 = { style: "currency", currency: "EUR", decimal: ',' };
         const numberFormat3 = new Intl.NumberFormat("de-DE", option_3);
         result.innerHTML =
           numberFormat3.format(totalPrice(currencyEuro)) + " Euros";
@@ -132,47 +146,29 @@ calcularBtn.addEventListener("click", function () {
   }
 });
 
-// -- ** Evento Button ** -- \\
+// -- ** Chart Data ** -- \\
 
+async function chartData() {
+  var currencyType;
+  let etiqueta = "";
+  if (inputCurrency.selectedIndex == 0) {
+    var URL = "https://mindicador.cl/api/" + "dolar";
+    etiqueta = "Dolar";
+  } else {
+    var URL = "https://mindicador.cl/api/" + "euro";
+    etiqueta = "Euro";
+  }
 
-
- // -- ** validator converter ** -- \\
-
-function validator() {
-    let validate = false;
-    if  (Number.isNaN(inputClp.value) || Math.sign(inputClp.value) === -1 || inputClp.value === 0 || currencyC.selected == true) {
-      alert("datos incorrectos, por favor seleccione un numero valido.");
-    } else {
-      validate = true;
-    }
-    return validate;
+  try {
+    const res = await fetch(URL);
+    const currencyDate = await res.json();
+    currencyType = currencyDate.serie.map((val) => { return val.valor });
+    var date = currencyDate.serie.map((elemento) => { return elemento.fecha.split("T")[0] });
+  } catch (error) {
+    console.log(error);
   }
 
 
-  // -- ** Chart Data ** -- \\
-
-//Canvas Graphic
-async function chartData() {
-  var currencyType;
-  let etiqueta ="";        
-    if (inputCurrency.selectedIndex == 0) {
-      var URL =  "https://mindicador.cl/api/" + "dolar" // + "/" + dateNowCount + "";
-       etiqueta ="Dolar";        
-    } else {
-      var URL =  "https://mindicador.cl/api/" + "euro" // + "/" + dateNowCount + "";
-      etiqueta ="Euro";        
-    }
-
-    try {
-      const res = await fetch(URL);
-      const currencyDate = await res.json();   
-        currencyType = currencyDate.serie.map((val) => {return val.valor});
-        var date = currencyDate.serie.map((elemento) => { return elemento.fecha.split("T")[0] });
-    } catch (error) {
-      console.log(error);
-    }
-
-  
 
   const datasets = {
     labels: date,
@@ -185,33 +181,33 @@ async function chartData() {
       },
     ],
   };
-  currencyTypeH1.innerHTML ='Ultimo valor de:' + etiqueta;
+  currencyTypeH1.innerHTML = 'Ultimo valor de:' + etiqueta;
   return datasets;
 }
 
 // -- ** render Grafica ** -- \\
 
-  async function renderGrafica() {
-    const data = await chartData();
-    const config = {
-      type: "line",
-      data: data,
-    };
-    const myChart = document.getElementById("myChart");
-    myChart.innerHTML = "";
-    myChart.style.backgroundColor = "white";
-    window.myChart = new Chart(myChart, config);
-    canvaOn = true;
-  }
+async function renderGrafica() {
+  const data = await chartData();
+  const config = {
+    type: "line",
+    data: data,
+  };
+  const myChart = document.getElementById("myChart");
+  myChart.innerHTML = "";
+  myChart.style.backgroundColor = "white";
+  window.myChart = new Chart(myChart, config);
+  canvaOn = true;
+}
 
 
 // -- ** refresh Canva ** -- \\
 
-  function refreshCanva() {
-    if (canvaOn === true) {
-      window.myChart.clear();
-      window.myChart.destroy();
-    }
-    canvaOn = false;
-    
+function refreshCanva() {
+  if (canvaOn === true) {
+    window.myChart.clear();
+    window.myChart.destroy();
   }
+  canvaOn = false;
+
+}

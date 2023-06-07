@@ -1,0 +1,46 @@
+.container {
+  align-items: center;
+  height: 75vh;
+}
+
+.fondo-card {
+  background-color: #122953;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1em;
+  width: 100vw;
+  height: 70vh;
+
+}
+
+.card {
+  background-color: #FFFFFF;
+  align-items: center;
+  border-radius: 1em!important;
+  width: 95%!important;
+  height: 65vh;
+  z-index: 1;
+}
+
+.text-label {
+  color: #6b7280!important;
+}
+
+.d-flex1 {
+  justify-content: space-evenly;
+  display: flex;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+    
+  .text-label {
+    display: none;
+  }
+
+  .d-flex1 {
+    flex-direction: column;
+    padding: .3em;
+  }
+
+}

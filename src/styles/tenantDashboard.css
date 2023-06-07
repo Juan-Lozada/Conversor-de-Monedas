@@ -1,0 +1,14 @@
+html,
+body {
+    margin: 0px;
+
+}
+
+.card-body {
+    height: 50vh;
+    gap: 5vh ;
+}
+
+.tenantDashcard {
+    background-color: #122953;
+}

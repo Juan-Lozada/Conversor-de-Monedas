@@ -1,0 +1,21 @@
+.f-container {
+    background-color: #122953;
+}
+
+.f-footer {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    color: #FFFFFF;
+    display: flex;
+    height: 25vh;
+}
+
+p {
+    padding-top: 1em;
+}
+
+.f-favicon {
+    width: 3em;
+    height: 3em;
+}

@@ -1,0 +1,55 @@
+.container {
+  align-items: center;
+  height: 75vh;
+}
+  
+.fondo-card {
+  background-color: #122953;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1em;
+  width: 100vw;
+  height: 70vh;
+}
+  
+.card {
+  background-color: #FFFFFF;
+  border-radius: 1em 0 0 1em!important;
+  width: 48%!important;  
+  align-items: center;
+  height: 65vh;    
+}
+  
+.text-color {
+  color: #122953!important;
+}
+  
+.text-color:hover {
+  color: #6b7280!important;
+}
+  
+.card-img {
+  background-color: #122953!important;
+}
+  
+.img-login {
+  border-radius: 0 1em 1em 0!important;
+  height: 100vh!important; 
+}
+
+.input-login {
+  background-color: #FFFFFF!important;
+}
+  
+@media (max-width: 768px) {
+    
+  .card-img {
+    display: none;
+  }
+
+  .card {
+    border-radius: 1em!important;
+    width: 90%!important;
+  }
+
+}

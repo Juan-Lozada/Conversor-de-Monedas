@@ -1,0 +1,56 @@
+.container {
+    align-items: center;
+    height: 75vh;
+}
+  
+.fondo-card {
+    background-color: #122953;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1em;
+    width: 100vw;
+    height: 70vh;
+}
+  
+.card {
+    background-color: #FFFFFF;
+    border-radius: 0 1em 1em 0!important;
+    align-items: center;
+    width: 48%;
+    height: 65vh;
+}
+  
+.card-img {
+    background-color: #122953;
+}
+  
+.img-register {
+    border-radius: 1em 0 0 1em!important;
+    height: 75vh!important;
+}
+
+.f-form {
+    display: flex;
+}
+
+.mb-2 {
+    margin-right: .3em;
+    margin-left: .3em;
+}
+
+@media (max-width: 768px) {
+      
+    .card-img {
+        display: none;
+    }
+  
+    .card {
+      border-radius: 1em!important;
+      width: 90%;
+    }
+
+    .f-form {
+        display: flex;
+    }
+  
+}

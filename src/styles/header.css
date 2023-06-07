@@ -1,0 +1,56 @@
+.h-fondo {
+    background-image: url("https://media.istockphoto.com/id/1281595486/photo/aerial-hong-kongs-housing-estate-with-basketball-court.jpg?s=612x612&w=0&k=20&c=Rpr5HS8FG2sXELs2mziV67WtCm4Bc0orENDIW-RaQF4=");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 75vh;
+}  
+
+.h-container {
+    background-color: rgba(255, 255, 255, .9);
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+    height: 75vh;
+    padding: 0;
+    margin: 0;
+}
+
+p {
+    text-align: center;
+}
+
+.btn {
+    border-radius: 2em!important;
+    background-color: transparent;
+    border: 3px solid #d1d5db;
+    text-transform: uppercase;
+    transition: all 0.5s ease;
+    font-family: "Lato";
+    border-radius: 2px;
+    margin-bottom: 1em;
+    padding: 6px 12px;    
+    font-weight: 300;
+    cursor: pointer;
+    width: 20em;    
+}
+
+.btn {
+    background: linear-gradient(to bottom, #122953 50%, transparent 50%);
+    background-position: left bottom;
+    background-size: 100% 200%;    
+    color: #000;
+}
+
+.btn:hover {
+    background-position: right top;
+}
+
+@media (max-width: 576px) {
+    
+    .b-navlink {
+        flex-direction: column;
+    }
+
+}

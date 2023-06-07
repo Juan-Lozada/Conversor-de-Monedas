@@ -17,21 +17,31 @@ Chart.register(CategoryScale);
 const currencyApiURL = "https://mindicador.cl/api/";
 
 export default function Conversor() {
-    const [chartInfo, setChartInfo] = useState(null);
+    const [chartInfo, setChartInfo] = useState({});
     const [currencyUF, setCurrencyUF] = useState(0);
     const [precioClp, setPrecioClp] = useState(0);
     const [canvaOn, setCanvaOn] = useState(false);
-    const [currencyChangeIndex, setCurrencyChangeIndex] = useState(0);
+    const [currencyChangeIndex, setCurrencyChangeIndex] = useState(1);
     const [dateNow, setDateNow] = useState("");
     const [result, setResult] = useState("");
+    const [canvasReady, setCanvasReady] = useState(false);
+    const [priceHistory, setPriceHistory] = useState([]);
+
 
     const inputClp = useRef(null);
-    const inputCurrency = useRef(null);
+
+    useEffect(() => {
+        const canvasElement = document.getElementById("myChart");
+        if (canvasElement) {
+            setCanvasReady(true);
+            renderGrafica();
+        }
+    }, []);
 
     useEffect(() => {
         async function ChartDataAPI() {
-            const data = await ChartData(inputCurrency.current);
-            setChartInfo(data);;
+            const data = await ChartData();
+            setChartInfo(data);
         }
 
         ChartDataAPI();
@@ -63,30 +73,31 @@ export default function Conversor() {
 
     function validator() {
         let validate = false;
-        const currencyC = inputCurrency.current.state.value;
-        if (isNaN(inputClp.current.value) || inputClp.current.value <= 0) {
-            inputClp.current.value = "";
-            inputClp.current.value.replace(/ /g, "");
+        const clpValue = inputClp.current.value.trim(); // Eliminar espacios en blanco al inicio y al final
+
+        if (clpValue === "") {
             alert("Datos incorrectos, por favor seleccione un número válido.");
-        } else if (currencyC === "predeterminado") {
+        } else if (isNaN(clpValue) || clpValue <= 0) {
+            inputClp.current.value = "";
+            alert("Datos incorrectos, por favor seleccione un número válido.");
+        } else if (currencyChangeIndex === 0) {
             alert("Por favor, seleccione una moneda a convertir.");
         } else {
             validate = true;
         }
+
         return validate;
     }
 
     function totalPrice(precioCurrency) {
-        const price = precioClp / precioCurrency;
-
-        const numberFormat = new Intl.NumberFormat("es-CL", {
-            style: "currency",
-            currency: "CLP",
-        });
-
-        return numberFormat.format(price);
+        if (currencyChangeIndex === 1) {
+            const price = precioClp * precioCurrency;
+            return price;
+        } else {
+            const price = precioClp / precioCurrency;
+            return price;
+        }
     }
-
 
     function refreshCanva() {
         if (canvaOn === true) {
@@ -97,19 +108,9 @@ export default function Conversor() {
     }
 
     function handleInputChange(event) {
-        const clpValue = event.target.value;
+        let clpValue = event.target.value;
+        clpValue = clpValue.replace(/[^0-9.]/g, "");
         setPrecioClp(Number(clpValue));
-
-        const option_two = {
-            style: "currency",
-            currency: "CLP",
-        };
-        const numberFormat2 = new Intl.NumberFormat("es-cl", option_two);
-        event.target.value = numberFormat2.format(clpValue);
-    }
-
-    function handleCurrencyChange(selectedOption) {
-        setCurrencyChangeIndex(selectedOption.selectedIndex);
     }
 
     function handleCalcularBtnClick() {
@@ -117,17 +118,35 @@ export default function Conversor() {
         if (validator()) {
             const ufValue = currencyUF;
             const convertedPriceUF = totalPrice(ufValue);
-            setResult(convertedPriceUF + " UF");
-
+            setResult(convertedPriceUF.toLocaleString("es-CL") + " CLP");
+            setPriceHistory(prevPriceHistory => prevPriceHistory.concat(convertedPriceUF));
             renderGrafica();
         }
     }
+
+
     function renderGrafica() {
-        // Lógica para renderizar la gráfica utilizando Chart.js
+        if (!canvasReady) {
+            return;
+        }
         const ctx = document.getElementById("myChart").getContext("2d");
+
+        if (window.myChart) {
+            window.myChart.destroy();
+        }
+
         window.myChart = new Chart(ctx, {
-            type: "line",
-            data: chartInfo,
+            type: "bar",
+            data: {
+                labels: ["Precio"],
+                datasets: [
+                    {
+                        label: "Historial de precios",
+                        data: priceHistory,
+                        backgroundColor: "rgba(54, 162, 235, 0.6)",
+                    },
+                ],
+            },
             options: {
                 responsive: true,
                 scales: {
@@ -137,6 +156,7 @@ export default function Conversor() {
                 },
             },
         });
+
         setCanvaOn(true);
     }
 
@@ -145,8 +165,7 @@ export default function Conversor() {
             <MDBRow>
                 <MDBCol>
                     <div className="input-group mb-3 mt-3" id="inputBg">
-                        <h2 className="text-center col-12 p-2">Pesos CLP</h2>
-
+                        <h2 className="text-center col-12 p-2">UF</h2>
                     </div>
                     <div>
                         <MDBInput
@@ -162,12 +181,13 @@ export default function Conversor() {
             <h3 className="text-center col-12 p-2">Moneda a convertir</h3>
             <Select
                 className="form-select-lg col-8 mx-auto rounded"
-                id="inputCurrency"
-                ref={inputCurrency}
                 options={[
-                    { value: "UF", label: "UF" },
+                    { value: "CLP", label: "CLP" }
                 ]}
-                onChange={handleCurrencyChange}
+                defaultValue={{ value: "CLP", label: "CLP" }}
+                onChange={(selectedOption) =>
+                    setCurrencyChangeIndex(selectedOption.selectedIndex)
+                }
             />
             <MDBBtn
                 type="button"
@@ -177,6 +197,9 @@ export default function Conversor() {
             >
                 Calcular
             </MDBBtn>
+            <h4 className="text-center col-12 p-2">Monto total: {result}</h4>
+
+            <canvas id="myChart"></canvas>
         </MDBCard>
     );
 }

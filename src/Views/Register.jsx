@@ -20,11 +20,9 @@ import '../styles/register.css';
 
 import CurrencyLogo from '../img/logoTransparente.png'
 
-import { useContext, useState } from "react";
+import { useState } from "react";
 
-import ContextOrigin from "../Context";
 
-import ApiComunas from "../API/comunas.json"
 import Footer from '../Components/Footer';
 import Api from '../API/Api';
 
@@ -32,8 +30,6 @@ import Api from '../API/Api';
 export default function Register() {
   const [user, setUser] = useState({});
   const [selectedOption, setSelectedOption] = useState(null);
-  const [optionsComunas, setOptionsComunas] = useState([]);
-  const [rut, setRut] = useState('');
   const [rutRawValue, setRutRawValue] = useState('');
   const navigate = useNavigate();
 

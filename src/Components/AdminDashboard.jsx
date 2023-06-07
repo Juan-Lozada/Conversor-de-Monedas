@@ -23,8 +23,9 @@ export default function AdminDashboard() {
   return (
     <div className="tenant-profile p-5">
       <Row className="justify-content-center p-5">
-        <Conversor/>
-        <ChartComponent/>
+        <Conversor />
+        <canvas id="myChart"></canvas>
+        <ChartComponent />
       </Row>
     </div>
   );

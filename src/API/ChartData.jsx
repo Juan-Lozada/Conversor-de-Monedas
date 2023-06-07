@@ -1,4 +1,4 @@
-export default async function ChartData(inputCurrency) {
+export default async function ChartData({ inputCurrency }) {
     let currencyType;
     let etiqueta = "";
 

@@ -71,9 +71,6 @@ export default function Register() {
     { value: 'Admin', label: 'Admin' }
   ]
 
-  useEffect(() => {
-    setOptionsComunas(ApiComunas.comunas.map((comuna) => ({ value: comuna, label: comuna })));
-  }, [ApiComunas]);
 
   return (
     <>
@@ -82,10 +79,10 @@ export default function Register() {
 
           <MDBCard className="card-img">
             <img
-              src="https://halliday-v2.s3.amazonaws.com/uploads/sites/12/2022/11/Glasgow-Green-3-Halliday-Lighting-scaled.jpg"
+              src="https://cdn.litemarkets.com/cache/uploads/blog_post/blog_posts/OBV/adx-1.jpg?q=75&s=63e17b9632c6cfe8f119a6021d992089"
               alt="Login image"
-              className="w-100 img-register"
-              style={{ height: '600px', width: '1000px' }}
+              className="img-register"
+              style={{ height: '600px', width: '85vh' }}
             />
           </MDBCard>
 

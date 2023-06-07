@@ -26,7 +26,7 @@ export default function Conversor() {
     const [result, setResult] = useState("");
     const [canvasReady, setCanvasReady] = useState(false);
     const [priceHistory, setPriceHistory] = useState([]);
-
+    const [chartInstance, setChartInstance] = useState(null);
 
     const inputClp = useRef(null);
 
@@ -39,8 +39,8 @@ export default function Conversor() {
     }, []);
 
     useEffect(() => {
-        async function ChartDataAPI() {
-            const data = await ChartData();
+        async function ChartDataAPI({ inputCurrency }) {
+            const data = await ChartData({ inputCurrency });
             setChartInfo(data);
         }
 
@@ -100,9 +100,8 @@ export default function Conversor() {
     }
 
     function refreshCanva() {
-        if (canvaOn === true) {
-            window.myChart.clear();
-            window.myChart.destroy();
+        if (chartInstance) {
+            chartInstance.destroy();
         }
         setCanvaOn(false);
     }
@@ -131,18 +130,20 @@ export default function Conversor() {
         }
         const ctx = document.getElementById("myChart").getContext("2d");
 
-        if (window.myChart) {
-            window.myChart.destroy();
+        if (chartInstance) {
+            chartInstance.destroy();
         }
 
-        window.myChart = new Chart(ctx, {
+        const sortedPriceHistory = priceHistory.slice().sort((a, b) => a - b);
+
+        const newChartInstance = new Chart(ctx, {
             type: "bar",
             data: {
-                labels: ["Precio"],
+                labels: sortedPriceHistory.map((_, index) => `Día ${index + 1}`),
                 datasets: [
                     {
                         label: "Historial de precios",
-                        data: priceHistory,
+                        data: sortedPriceHistory,
                         backgroundColor: "rgba(54, 162, 235, 0.6)",
                     },
                 ],
@@ -157,6 +158,7 @@ export default function Conversor() {
             },
         });
 
+        setChartInstance(newChartInstance);
         setCanvaOn(true);
     }
 
@@ -199,7 +201,7 @@ export default function Conversor() {
             </MDBBtn>
             <h4 className="text-center col-12 p-2">Monto total: {result}</h4>
 
-            <canvas id="myChart"></canvas>
+            
         </MDBCard>
     );
 }

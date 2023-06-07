@@ -17,7 +17,7 @@ import Api from "../API/Api.jsx";
 const { Context } = ContextOrigin;
 
 export default function Login() {
-  const { setSession, session, users, setUsers } = useContext(Context);
+  const { setSession, session} = useContext(Context);
 
   const [formData, setFormData] = useState({ email: "", password: "" });
 

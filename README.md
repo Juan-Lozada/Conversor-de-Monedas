@@ -9,6 +9,8 @@
 Windows:
 
 ```sh
-npm install i --save
+npm install --save
+npm run dev
+
 ```
 
